@@ -978,6 +978,7 @@ pragma solidity ^0.5.0;
  * @dev see https://eips.ethereum.org/EIPS/eip-721
  */
 contract ERC721Full is ERC721, ERC721Enumerable, ERC721Metadata {
+    // This constructor is ran whenever the smart contract is created or ran in the blockchain
     constructor (string memory name, string memory symbol) public ERC721Metadata(name, symbol) {
         // solhint-disable-previous-line no-empty-blocks
     }
