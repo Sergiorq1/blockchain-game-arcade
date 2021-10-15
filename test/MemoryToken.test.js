@@ -1,3 +1,4 @@
+// testing is VERY important in blockchain applications, once a smart contract is deployed, you can't change it
 const { assert } = require('chai')
 
 const MemoryToken = artifacts.require('./MemoryToken.sol')
@@ -29,6 +30,41 @@ contract('Memory Token', (accounts) => {
       const symbol = await token.symbol()
       assert.equal(symbol, 'MEMORY')
     })   
-    
+
+  })
+  describe('token distribution', async () => {
+    let result 
+
+    it('mints tokens', async () => {
+      await token.mint(accounts[0], 'https://www.token-url.com/nft')
+
+      // Should increase total supply of tokens
+      result = await token.totalSupply()
+      assert.equal(result.toString(), '1', 'total supply is correct')
+
+      // Should increment owner balance
+      result = await token.balanceOf(accounts[0])
+      assert.equal(result.toString(), '1', 'balanceOf is correct')
+
+      // Token should belong to owner
+      result = await token.ownerOf('1')
+      assert.equal(result.toString(), accounts[0].toString(), "ownerOf is correct")
+
+      // result = await token.tokenOfOwnerByIndex(accounts[0], 0)
+      // Owner can see all tokens
+      //num of tokens
+      let balanceOf = await token.balanceOf(accounts[0])
+      let tokenIds = []
+      for (let i=0; i<balanceOf; i++) {
+        let id = await token.tokenOfOwnerByIndex(accounts[0], i)
+        tokenIds.push(id.toString())
+      }
+      let expected = ['1']
+      assert.equal(tokenIds.toString(), expected.toString(), "tokenId's are correct")
+
+      // token URI correct
+      let tokenURI = await token.tokenURI('1')
+      assert.equal(tokenURI, 'https://www.token-url.com/nft')
+    })
   })
 })
