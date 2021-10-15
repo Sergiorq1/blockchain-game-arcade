@@ -6,6 +6,39 @@ import brain from '../brain.png'
 
 class App extends Component {
 
+  async componentWillMount() {
+    await this.loadWeb3()
+    await this.loadBlockchainData()
+  }
+
+  async loadWeb3() {
+    if (window.ethereum) {
+      window.web3 = new Web3(window.etherium)
+      await window.ethereum.enable()
+    }
+    else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider)
+    }
+    else {
+      window.alert('Non-Etherium browser detected. You should consider using MetaMask!')
+    }
+  }
+
+  async loadBlockchainData() {
+    const web3 = window.ethereum
+    const accounts = await web3.request({ method: 'eth_accounts' });
+    this.setState({ account: accounts[0] })
+
+    //load smart contract
+
+    const networkId = await web3.request({ method: 'net_version'})
+    const networkData = MemoryToken.networks[networkId]
+    if (networkData) {
+      const address = networkData.address
+    } else {
+      alert('Smart contract not deployed to detected network')
+    }
+  }
 
   constructor(props) {
     super(props)
