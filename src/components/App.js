@@ -88,7 +88,8 @@ class App extends Component {
       const abi = MemoryToken.abi
       const address = networkData.address
       // const token = new web3.eth.Contract(abi, address)
-      const token = (abi, address)
+      window.web3 = new Web3(window.ethereum);
+      const token = await new window.web3.eth.Contract(abi, address)
       this.setState({ token: token})
       const totalSupply = await token.methods.totalSupply().call()
       this.setState({ totalSupply: totalSupply })
@@ -183,7 +184,7 @@ class App extends Component {
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
           <a
             className="navbar-brand col-sm-3 col-md-2 mr-0"
-            href="http://www.dappuniversity.com/bootcamp"
+            href=""
             target="_blank"
             rel="noopener noreferrer"
           >
